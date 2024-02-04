@@ -1,6 +1,7 @@
 package com.example.currencyexchanger.repositories;
 
 import com.example.currencyexchanger.models.ExchangeRate;
+import jakarta.servlet.ServletContext;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -16,9 +17,10 @@ public class ExchangeRatesRepository implements CrudRepository<ExchangeRate> {
     private final DataSource dataSource;
     private final CurrencyRepository currencyRepository;
 
-    public ExchangeRatesRepository(DataSource dataSource) {
+    public ExchangeRatesRepository(DataSource dataSource, ServletContext context) {
         this.dataSource = dataSource;
-        currencyRepository = new CurrencyRepository(dataSource);
+        currencyRepository = (CurrencyRepository) context.getAttribute("currencyRepository");
+//        currencyRepository = new CurrencyRepository(dataSource);
     }
 
     private ExchangeRate createNewExchangeRate(ResultSet resultSet) {
@@ -32,6 +34,7 @@ public class ExchangeRatesRepository implements CrudRepository<ExchangeRate> {
             return null;
         }
     }
+
 
 
     @Override
@@ -66,7 +69,7 @@ public class ExchangeRatesRepository implements CrudRepository<ExchangeRate> {
                 "currencyexchanger.exchangerates.basecurrencyid, " +
                 "currencyexchanger.exchangerates.targetcurrencyid, " +
                 " currencyexchanger.exchangerates.rate " +
-                "FROM currencyexchanger.exchangerates" +
+                "FROM currencyexchanger.exchangerates " +
                 "JOIN currencyexchanger.currencies base on base.id = exchangerates.basecurrencyid " +
                 "JOIN currencyexchanger.currencies target on target.id = exchangerates.targetcurrencyid " +
                 "WHERE base.code=? AND target.code=?";

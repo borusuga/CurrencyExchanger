@@ -23,10 +23,11 @@ public class CurrencyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getPathInfo() == null || request.getPathInfo().equals("/")) {
+            // проверка на корректность запроса
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Указана не корректная валюта. Пример: .../currency/USD");
             return;
         }
-
+        // получаем код валюты
         String currencyCode = request.getPathInfo().replaceFirst("/", "").toUpperCase();
 
         Optional<Currency> currency = currencyRepository.findByName(currencyCode);

@@ -23,9 +23,9 @@ public class ContextListener implements ServletContextListener {
         HikariDataSource hikariDataSource = makeHikariDataSource(context);
 
         CurrencyRepository currencyRepository = new CurrencyRepository(hikariDataSource);
-        ExchangeRatesRepository exchangeRatesRepository = new ExchangeRatesRepository(hikariDataSource);
-
         context.setAttribute("currencyRepository", currencyRepository);
+
+        ExchangeRatesRepository exchangeRatesRepository = new ExchangeRatesRepository(hikariDataSource, context);
         context.setAttribute("exchangeRatesRepository", exchangeRatesRepository);
     }
 
